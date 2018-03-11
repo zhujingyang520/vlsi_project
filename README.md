@@ -73,8 +73,8 @@ include the Verilog source codes to the VCS command.
 In order to launch the VCS compilation and simulation, you only have to type the
 following 2 commands in your terminal:
 
-  >> ./run
-  >> ./simv -gui
+  $ ./run
+  $ ./simv -gui
 
 The DVE GUI will be launched, and you are able to run the simulation and view
 the waveform. The usage of DVE GUI is very simple, you can simply drag the
