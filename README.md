@@ -110,4 +110,4 @@ Initially, there exists 4 files under the `syn` directory:
 
 The provided `run.tcl` script uses an Open Source standard cell library, called
 Nangate FreePDK 45nm. It can be freely accessed
-here[http://www.nangate.com/?page_id=2325] after the registration.
+[here](http://www.nangate.com/?page_id=2325) after the registration.
