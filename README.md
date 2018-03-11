@@ -21,6 +21,7 @@ operations in Linux, such as:
 - `find`: find the specified files or directories under a specified location
 - `grep`: find the specified pattern in the contents of files
 - `tar`: compress or un-compress of files into or from an archive
+- `histroy`: check the command line history you have used before
 
 There is a more detailed explanation called `linux_command.pdf` under
 the `document` directory. You can find more detailed information there if you
@@ -36,6 +37,34 @@ different design stages of digital design flow:
 - `syn_sim`: conduct the gate-level simulation of the post-synthesis results
 - `layout`: run the place and route (P&R) in this directory
 - `layout_sim`: conduct the gate-level simulation of the post-layout results
+
+## Step 0: Tool chain setup
+In the sampled project, we will use the following tools for our VLSI design:
+- Synopsys VCS: RTL behavior simulation, post-synthesis simulation, and
+  post-layout simulation.
+- Synopsys Design Compiler: RTL synthesis.
+- Cadence Encounter Digital Implementation: place and route.
+
+In order to launch the software properly, we should activate the running
+environment for each software on our server. The software can be enabled on UST
+server as follows:
+- Synopsys VCS: 
+  > source /usr/eelocal/synopsys/vcs_mx-vi2014.03-2/.cshrc
+- Synopsys Design Compiler:
+  > source /usr/eelocal/synopsys/syn-vi2013.12-sp5-5/.cshrc
+- Cadence Encounter Digital Implementation:
+  > source /usr/eelocal/cadence/edi142/.cshrc
+
+You can also append all these settings to your local `.cshrc` file so that you do
+not need to type it each time when you log in your system. Concretely, type the
+following shell commands in the terminal:
+
+```sh
+echo "source /usr/eelocal/synopsys/vcs_mx-vi2014.03-2/.cshrc" >> ~/.cshrc
+echo "source /usr/eelocal/synopsys/syn-vi2013.12-sp5-5/.cshrc" >> ~/.cshrc
+echo "source /usr/eelocal/cadence/edi142/.cshrc" >> ~/.cshrc
+
+```
 
 ## Step 1: RTL design
 In `rtl` directory, we have provided a skeleton of the RTL design of an N-bit
@@ -205,10 +234,11 @@ For design import step, the sampled `mmc.view` is included in `scripts`
 directory for your reference. As before, the file path of Nangate FreePDK should
 be varied on your system. You should modify the content of `mmc.view` to cater
 for your system settings. It is recommended to understand how we define the
-fast corner for hold time analysis and the slow corner for setup time analysis.
+fast corner for hold time analysis and the slow corner for setup time analysis
+in `mmc.view`.
 
 In addition, the width of power ring and the number of stripes can be decreased
-since the divder is much simpler than the LEON processor (less power hungry).
+since the divider is much simpler than the LEON processor (less power hungry).
 
 Of note, the Nangate FreePDK does not provide QRC technology file. It only
 provides the capacitance table file. Therefore, in the final step of post-route
@@ -221,4 +251,4 @@ always provide you with the QRC technology file.
 This step is similar to Step 4 except the netlist and delay file are from P&R
 instead of synthesis results. You can follow the procedure in Step 4 to launch
 the post-layout simulation. It is expected to observe the waveform with latency
-and glicthes but the functionality should be same as before.
+and glitches but the functionality should be same as before.
