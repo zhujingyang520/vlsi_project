@@ -75,9 +75,9 @@ include the Verilog source codes to the VCS command.
 In order to launch the VCS compilation and simulation, you only have to type the
 following 2 commands in your terminal:
 
-  ./run
+  > ./run
 
-  ./simv -gui
+  > ./simv -gui
 
 The DVE GUI will be launched, and you are able to run the simulation and view
 the waveform. The usage of DVE GUI is very simple, you can simply drag the
@@ -111,3 +111,31 @@ Initially, there exists 4 files under the `syn` directory:
 The provided `run.tcl` script uses an Open Source standard cell library, called
 Nangate FreePDK 45nm. It can be freely accessed
 [here](http://www.nangate.com/?page_id=2325) after the registration.
+You are recommanded to use a different standard cell library if you are right
+now working on some projects using the commerical library such as TSMC 65nm
+or UMC 45nm.
+
+Before you run the synethsis for the divider, you must modify the TCL script
+`run.tcl`, which defines the library path to the Nangate FreePDK 45nm. More
+specifically, the standard cell library is stored on the following path:
+
+```sh
+/mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/
+```
+
+As a result, the `search_path` includes that directory. You have to modify the
+`search_path` accordingly based on your system settings.
+
+In order to run the synethsis flow of the design project, you only need to type
+the following command in the terminal:
+
+  > ./run
+
+If the settings are correct, you will observe 2 directories have been generated
+under the current directory:
+
+- `results`: the synethsized results, including gate-level netlist, Design
+  Compiler binary file (\*.ddc), constraint file (\*.sdc), and delay file
+(\*.sdf)
+- `reports`: the reports of the synethsized results, including area, power and
+  timing reports of the design
