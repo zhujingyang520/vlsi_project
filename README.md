@@ -21,7 +21,7 @@ operations in Linux, such as:
 - `find`: find the specified files or directories under a specified location
 - `grep`: find the specified pattern in the contents of files
 - `tar`: compress or un-compress of files into or from an archive
-- `histroy`: check the command line history you have used before
+- `history`: check the command line history you have used before
 
 There is a more detailed explanation called `linux_command.pdf` under
 the `document` directory. You can find more detailed information there if you
