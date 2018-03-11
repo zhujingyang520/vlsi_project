@@ -22,7 +22,7 @@ operations in Linux, such as:
 - `grep`: find the specified pattern in the contents of files
 - `tar`: compress or un-compress of files into or from an archive
 
-There is a more detailed explanation called 'linux_command.pdf' under
+There is a more detailed explanation called `linux_command.pdf` under
 the `document` directory. You can find more detailed information there if you
 are not familiar with the Linux environment.
 
@@ -62,7 +62,7 @@ After the RTL design is finished, we should run the behavior simulation to not
 only check there is no syntax error with our design, but also the functionality
 and timing of the design is correct. We will run the behavior simulation in the
 `behav_sim` directory. We provide the testbench code for our design, i.e.
-`divider_tb.v`. It is highly recommanded to check the content of the testbench
+`divider_tb.v`. It is highly recommended to check the content of the testbench
 to see how the input stimulus are applied to the inputs of the divider.
 Moreover, there exists two simple shell scripts under `behav_sim` directory:
 
@@ -105,28 +105,35 @@ Initially, there exists 4 files under the `syn` directory:
 - `clean`: the simple shell script removing the generated results by the
   Synopsys Design Compiler
 - `run.tcl`: the main TCL script to run the whole synthesis flow
-- `divider.constraints.tcl`: the TCL script containing the design contraints,
+- `divider.constraints.tcl`: the TCL script containing the design constraints,
   including time constraint and environment constraint
 
 The provided `run.tcl` script uses an Open Source standard cell library, called
 Nangate FreePDK 45nm. It can be freely accessed
 [here](http://www.nangate.com/?page_id=2325) after the registration.
-You are recommanded to use a different standard cell library if you are right
-now working on some projects using the commerical library such as TSMC 65nm
+You are recommended to use a different standard cell library if you are right
+now working on some projects using the commercial library such as TSMC 65nm
 or UMC 45nm.
 
-Before you run the synethsis for the divider, you must modify the TCL script
+Before you run the synthesis for the divider, you must modify the TCL script
 `run.tcl`, which defines the library path to the Nangate FreePDK 45nm. More
-specifically, the standard cell library is stored on the following path:
+specifically, the standard cell library is stored on the following path in my
+system:
 
 ```sh
 /mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/
 ```
 
 As a result, the `search_path` includes that directory. You have to modify the
-`search_path` accordingly based on your system settings.
+`search_path` accordingly based on your system settings. Of note, the Design
+Compiler requires the binary format of the standard cell library (\*.db) instead
+of readable ASCII format (\*.lib). For Nangate FreePDK, only the ASCII format is
+provided. Thereby, you need compile it into the binary format. Luckily, Design
+Compiler provides a companied tool to do this task, called `Library Compiler`.
+You can find the procedure to do the compilation from \*.lib to \*.db
+[here](https://www.utdallas.edu/~akshay.sridharan/index_files/Page6049.htm).
 
-In order to run the synethsis flow of the design project, you only need to type
+In order to run the synthesis flow of the design project, you only need to type
 the following command in the terminal:
 
   > ./run
@@ -134,8 +141,84 @@ the following command in the terminal:
 If the settings are correct, you will observe 2 directories have been generated
 under the current directory:
 
-- `results`: the synethsized results, including gate-level netlist, Design
+- `results`: the synthesized results, including gate-level netlist, Design
   Compiler binary file (\*.ddc), constraint file (\*.sdc), and delay file
 (\*.sdf)
-- `reports`: the reports of the synethsized results, including area, power and
+- `reports`: the reports of the synthesized results, including area, power and
   timing reports of the design
+
+It is suggested to closely read the generated reports and synthesized
+gate-level netlist.
+
+### Step 4. Post-synthesis simulation
+The gate-level simulation of post-synthesis should be conducted under `post_syn`
+directory. In this step, you should first copy the synthesized results from Step
+3. More specifically, the netlist (\*.mapped.v) and the delay file (\*.sdf) are
+needed to be copied from `syn` directory to the current directory. A sampled
+synthesized netlist and delay file are already included in this folder in case
+you fail to write the HDL design of the divider or do the synthesis. You should
+replace the sampled files with your synthesized results here. In addition, a
+modified testbench `divider_tb.v` is also included in this directory. The
+testbench contains the additional SDF back-annotation part as follows:
+
+```verilog
+initial begin
+  $sdf_annotate("your_sdf_filename.sdf", your_instantiate_module);
+end
+```
+
+Similar to the behavior simulation in Step 2, 2 handy shell scripts are provided
+to compile the simulation of synthesized netlist and clean the simulation. The
+`run` script for post-synthesis simulation should include the verilog behavior
+model of standard cell. Therefore, we need pass the behavior model to the VCS
+compilation. You should modify the file path to the verilog behavior model in
+`run` script. If your setting is correct, you can run the compilation and
+simulation as in Step 2:
+
+  > ./run
+
+  > ./simv -gui
+
+In the waveform of post-synthesis simulation, you should observe the latency as
+well as glitches. But the calculated results of each division should be the same
+as the behavior simulation. The results can be conveniently observed from the
+console of DVE.
+
+### Step 5. Place and route (P&R)
+P&R takes the synthesized netlist from Step 3, and generates the final layouts
+for your design. In this step, we follow the flow of official EDI tutorial
+called `EDI13.1workshoplab1.pdf` in `document` directory. In the workshop, a
+LEON processor is placed and routed. The design flow is similar to the steps
+provided by the official workshop. The main differences of P&R with the official
+workshop are listed as follows:
+
+- Standard cell library: EDI official workshop uses Cadence FreePDK 45nm. In the
+  sampled project, we are using Nangate FreePDK 45nm. You can also pick any
+commercial standard cell library.
+- Design complexity: the LEON processor in EDI offiical workshop is more
+  complex than the simple divider module. For example, there exists 4 memory
+MACROs in LEON processor. Therefore, in the floorplan section in official
+workshop, 4 MACROs will be placed in the chip. However, the divider does not
+contain the memory MACRO. These floorplan steps can be omitted.
+
+For design import step, the sampled `mmc.view` is included in `scripts`
+directory for your reference. As before, the file path of Nangate FreePDK should
+be varied on your system. You should modify the content of `mmc.view` to cater
+for your system settings. It is recommended to understand how we define the
+fast corner for hold time analysis and the slow corner for setup time analysis.
+
+In addition, the width of power ring and the number of stripes can be decreased
+since the divder is much simpler than the LEON processor (less power hungry).
+
+Of note, the Nangate FreePDK does not provide QRC technology file. It only
+provides the capacitance table file. Therefore, in the final step of post-route
+timing and SI optimization, we are not able to set the RC extraction effort
+level to medium. As a compromise, we set the extraction level to *low* here.
+Keep in mind that in a commercial standard cell library, the foundry will
+always provide you with the QRC technology file.
+
+### Step 6. Post-layout simulation
+This step is similar to Step 4 except the netlist and delay file are from P&R
+instead of synthesis results. You can follow the procedure in Step 4 to launch
+the post-layout simulation. It is expected to observe the waveform with latency
+and glicthes but the functionality should be same as before.
