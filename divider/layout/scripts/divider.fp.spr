@@ -1,0 +1,29 @@
+Version 4.1
+Micron 2000
+LAYERS 22
+active
+metal1
+metal2
+metal3
+metal4
+metal5
+metal6
+metal7
+metal8
+metal9
+metal10
+via1
+via2
+via3
+via4
+via5
+via6
+via7
+via8
+via9
+poly
+OVERLAP
+VIAS 0
+SPECIALNETS
+0 0 1 VSS
+0 0 1 VDD

@@ -1,0 +1,12 @@
+# Version:1.0 MMMC View Definition File
+# Do Not Remove Above Line
+create_rc_corner -name rc_best -cap_table {/mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/captables/NCSU_FreePDK_45nm.capTbl} -T {0} -preRoute_res {1.34236} -preRoute_cap {1.110066} -preRoute_clkres {0.0} -preRoute_clkcap {0.0} -postRoute_res {1.34236} -postRoute_cap {0.960234} -postRoute_xcap {1.22327} -postRoute_clkres {0.0} -postRoute_clkcap {0.969117 0 0}
+create_rc_corner -name rc_worst -cap_table {/mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/captables/NCSU_FreePDK_45nm.capTbl} -T {125} -preRoute_res {1.34236} -preRoute_cap {1.10066} -preRoute_clkres {0.0} -preRoute_clkcap {0.0} -postRoute_res {1.34236} -postRoute_cap {0.960234} -postRoute_xcap {1.22327} -postRoute_clkres {0.0} -postRoute_clkcap {0.969117 0 0}
+create_library_set -name lib_slow -timing {/mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/Front_End/Liberty/NLDM/NangateOpenCellLibrary_slow.lib}
+create_library_set -name lib_fast -timing {/mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/Front_End/Liberty/NLDM/NangateOpenCellLibrary_fast.lib}
+create_constraint_mode -name constraint_slow -sdc_files {designs/divider.mapped.sdc}
+create_delay_corner -name delay_corner_slow -library_set {lib_slow} -rc_corner {rc_worst}
+create_delay_corner -name delay_corner_fast -library_set {lib_fast} -rc_corner {rc_best}
+create_analysis_view -name analysis_slow -constraint_mode {constraint_slow} -delay_corner {delay_corner_slow}
+create_analysis_view -name analysis_fast -constraint_mode {constraint_slow} -delay_corner {delay_corner_fast}
+set_analysis_view -setup {analysis_slow} -hold {analysis_fast}
