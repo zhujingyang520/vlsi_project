@@ -253,7 +253,13 @@ provides the capacitance table file. Therefore, in the final step of post-route
 timing and SI optimization, we are not able to set the RC extraction effort
 level to medium. As a compromise, we set the extraction level to *low* here.
 Keep in mind that in a commercial standard cell library, the foundry will
-always provide you with the QRC technology file.
+always provide you with the QRC technology file. 
+
+On UST server, we provide the compiled QRC technology file from NCSU FreePDK
+45nm. It is possible for you to include the QRC file when you import the design.
+A new version of `mmc2.view` is provided for your reference to include the
+technology file as well as SI library file (\*.cdb). As before the data path of
+library needs to be modified accordingly based on your system.
 
 After the post-route timing and SI optimization are conducted, 2 additional
 files are required for the later post-layout simulation:
