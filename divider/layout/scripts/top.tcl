@@ -168,6 +168,25 @@ saveDesign db/divider_postroute.enc
 # - netlist file
 # - gds file
 ################################################################################
+# ------------------------------------------------------------------------------
+# Step 7a. Exports useful reports
+# ------------------------------------------------------------------------------
+# Reports of Geometry and Connectivity (DRC)
+verifyGeometry -report reports/divider.geometry.rpt
+verifyConnectivity -type all -report reports/divider.connectivity.rpt
+
+# Summary reports: html to be browsed, including total area breakdown
+summaryReport -outdir reports/summaryReport
+
+# Area report: only report total standard cells area (excluding fillers)
+report_area -out_file reports/divider.routed.area.rpt
+
+# Power report
+report_power -outfile reports/divider.routed.power.rpt
+
+# ------------------------------------------------------------------------------
+# Step 7b. Exports the design
+# ------------------------------------------------------------------------------
 # SPEF file: parastic data of wires
 rcOut -spef results/divider.spef -rc_corner rc_worst
 
@@ -181,7 +200,3 @@ saveNetlist results/divider.routed.v
 streamOut results/divider.gds -mapFile streamOut.map \
           -merge {/mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/Back_End/gds/NangateOpenCellLibrary.gds} \
           -stripes 1 -units 2000 -mode ALL
-
-# Reports of Geometry and Connectivity (DRC)
-verifyGeometry -report reports/divider.geometry.rpt
-verifyConnectivity -type all -report reports/divider.connectivity.rpt
