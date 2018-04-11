@@ -1,0 +1,6 @@
+#!/bin/sh
+
+rm -fr db reports results clock_report
+rm -f encounter.* *.cts_trace *.rguide *.txt
+rm -f *.map *.mtarpt *.ctstch
+rm -fr celtic extLogDir .cadence

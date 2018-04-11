@@ -5,5 +5,5 @@
 ################################################################################
 VERILOG_LIB=/mnt/hgfs/PDK/NangateOpenCellLibrary_PDKv1_3_v2010_12/Front_End/Verilog/NangateOpenCellLibrary.v
 
-vcs -full64 divider.v divider_tb.v +v2k -debug_all -top divider_tb \
-  -timescale=1ns/1ps +neg_tchk +warn=noTFIPC -v $VERILOG_LIB
+vcs -full64 divider.routed.v divider_tb.v +v2k -debug_all -top divider_tb \
+  -timescale=1ns/1ps +neg_tchk +warn=noTFIPC,noSDFCOM_UHICD -v $VERILOG_LIB
