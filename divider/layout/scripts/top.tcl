@@ -96,7 +96,6 @@ placeDesign
 setExtractRCMode -engine preRoute
 
 # Optimize the design after placement
-setOptMode -fixCap true -fixTran true -fixFanoutLoad false
 optDesign -preCTS -outDir "reports/preCTSTimingReports"
 
 # Save the checkpoint for placement
@@ -111,13 +110,17 @@ saveDesign db/divider_place.enc
 # The clock tree buffer is PDK-dependent
 createClockTreeSpec -bufferList {CLKBUF_X1 CLKBUF_X2 CLKBUF_X3} -file \
                     Clock.ctstch
+
+# Set CTS engine: ck
+setCTSMode -engine ck
+
 # Perform CTS
-clockDesign -specFile Clock.ctstch -outDir clock_report -fixedInstBeforeCTS
+clockDesign -specFile Clock.ctstch -outDir clock_report -fixedInstBeforeCTS \
+            -updateIoLatency
 
 # Run post-CTS optimization
 setAnalysisMode -analysisType onChipVariation
 setAnalysisMode -cppr both
-update_io_latency
 optDesign -postCTS -outDir "reports/postCTSTimingReports"
 optDesign -postCTS -hold -outDir "reports/postCTSTimingReports"
 
@@ -140,10 +143,6 @@ setNanoRouteMode -quiet -routeWithTimingDriven true
 setNanoRouteMode -quiet -routeWithSiDriven true
 routeDesign -globalDetail
 
-# Add filler: FILLCELL_X32, X16, X8, X4, X2, X1
-addFiller -cell {FILLCELL_X32 FILLCELL_X16 FILLCELL_X8 FILLCELL_X4 FILLCELL_X2 \
-                 FILLCELL_X1}
-
 # Run post-route timing and SI optimization
 setExtractRCMode -engine postRoute
 setExtractRCMode -effortLevel medium
@@ -152,11 +151,28 @@ optDesign -postRoute -outDir "reports/postRouteTimingReports"
 optDesign -postRoute -hold -outDir "reports/postRouteTimingReports"
 
 # Run timing analysis for signoff
+# Enable either section bellowed
+# ------------------------------------------------------------------------------
+# Without QRC license or QRC
+# ------------------------------------------------------------------------------
+#setDelayCalMode -SIAware false
+#setDelayCalMode -engine signalStorm
+#setExtractRCMode -effortLevel medium
+#timeDesign -postRoute -si -outDir "reports/signoffTimingReports"
+#timeDesign -postRoute -si -hold -outDir "reports/signoffTimingReports"
+# ------------------------------------------------------------------------------
+# With QRC license and QRC installed
+# Make sure the Cadence EXT (i.e. QRC) is installed
+# On UST server: source /usr/eelocal/cadence/ext142/.cshrc
+# ------------------------------------------------------------------------------
 setDelayCalMode -SIAware false
 setDelayCalMode -engine signalStorm
-setExtractRCMode -effortLevel medium
-timeDesign -postRoute -si -outDir "reports/signoffTimingReports"
-timeDesign -postRoute -si -hold -outDir "reports/signoffTimingReports"
+timeDesign -signoff -si -outDir "reports/signoffTimingReports"
+timeDesign -signoff -si -hold -outDir "reports/signoffTimingReports"
+
+# Add filler: FILLCELL_X32, X16, X8, X4, X2, X1
+addFiller -cell {FILLCELL_X32 FILLCELL_X16 FILLCELL_X8 FILLCELL_X4 FILLCELL_X2 \
+                 FILLCELL_X1}
 
 # Save the checkpoint for post route
 saveDesign db/divider_postroute.enc
