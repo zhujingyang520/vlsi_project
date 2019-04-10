@@ -233,7 +233,7 @@ recommended to go through the floorplan section of the official workshop to
 understand the role of floorplan for the complex VLSI chip design.
 
 The first step is to import the synthesised netlist into `layout` directory. This is done
-in the script `top.tcl` and `mmc.view` located in directory `scripts`. A sampled 
+in the script `mmc.view` located at directory `scripts`. A sampled 
 `mmc.view` is included in `scripts`
 directory for your reference. As before, the file path of Nangate FreePDK should
 be varied on your system. You should modify the content of `mmc.view` to cater
