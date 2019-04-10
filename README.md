@@ -232,7 +232,9 @@ contain the memory MACRO. These floorplan steps can be skipped. But it is highly
 recommended to go through the floorplan section of the official workshop to
 understand the role of floorplan for the complex VLSI chip design.
 
-For design import step, the sampled `mmc.view` is included in `scripts`
+The first step is to import the synthesised netlist into `layout` directory. This is done
+in the script `top.tcl` and `mmc.view` located in directory `scripts`. A sampled 
+`mmc.view` is included in `scripts`
 directory for your reference. As before, the file path of Nangate FreePDK should
 be varied on your system. You should modify the content of `mmc.view` to cater
 for your system settings. It is recommended to understand how we define the
@@ -282,7 +284,9 @@ In order to simplify the P&R flow of simple design, which does not have many
 hierarchies and memory MACROs. I update a sampled script named `top.tcl` under
 directory `divider/layout/top.tcl`. It should be noted that in order to make the
 script work, you should modify the library path accordingly in `top.tcl` and
-`mmc2.view`. Similarly, to run the script-based P&R, two handy shell scripts,
+`mmc2.view`. Particulaly, you should modify directory of the synthesised netlist, 
+or move your netlist to exsiting folder mentioned in the script.
+Similarly, to run the script-based P&R, two handy shell scripts,
 `run` and `clean` are provided. More specifically, to run the P&R of
 the divider, you can type the following command in the terminal:
 
